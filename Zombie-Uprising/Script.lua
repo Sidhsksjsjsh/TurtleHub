@@ -206,6 +206,12 @@ Icon = "rbxassetid://4483345998",
 PremiumOnly = false
 })
 
+local P5 = Window:MakeTab({
+Name = "Gun Config",
+Icon = "rbxassetid://4483345998",
+PremiumOnly = false
+})
+
 local P2 = Window:MakeTab({
 Name = "Wall",
 Icon = "rbxassetid://4483345998",
@@ -325,84 +331,37 @@ UserInputService.JumpRequest:connect(
 end
 })
 
-local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/Karrot-Esp"))()
-
-P4:AddToggle({
-Name = "Enable ESP",
-Default = false,
-Callback = function(Value)
-    Settings.Esp = Value
-    ESP:Toggle(Settings.Esp)
+P5:AddButton({
+Name = "No-Recoil",
+Callback = function()
+local spread1 = {
+  Increase = 0,
+  Decrease = 0,
+  Max = 0,
+  Min = 0
+}
+local rec = {
+  Tilt = { 0, 0 },
+  Side = { 0, 0 },
+  Vertical = { 0, 0 },
+  Back = { 0, 0 },
+  Aimed = 0,
+  FirstShot = 0
+}
+for i,v in pairs(getgc(true)) do
+   if type(v) == 'table' and rawget(v, 'magsize') then
+       v.magsize = math.huge
+       v.storedammo = math.huge
+       v.rpm = math.huge
+       v.spread = spread1
+       v.recoil = rec
+       v.mode = "Auto"
+   end
 end
-})
-
-P4:AddToggle({
-Name = "Player ESP",
-Default = false,
-Callback = function(Value)
-    Settings.PlayerEsp = Value
-    ESP.Players = Settings.PlayerEsp
-end
-})
-
-P4:AddToggle({
-Name = "Zombie ESP",
-Default = false,
-Callback = function(Value)
-    Settings.Orange = Value
-    ESP.Orange = Settings.Orange
-
-ESP:AddObjectListener(Workspace.Zombies, {
-    Color =  Color3.new(255, 0, 0),
-    Type = "Model",
-    PrimaryPart = function(v)
-        local H = v:FindFirstChild("Torso")
-        while not H do
-            wait()
-            H = v:FindFirstChild("Torso")
-        end
-        return H
-    end,
-    Validator = function(v)
-        return not game.Players:GetPlayerFromCharacter(v) and v
-    end,
-    CustomName = function(v)
-        return "Zombie"
-    end,
-    IsEnabled = "Orange",
-})
-
 end
 })
 
 
-
-P4:AddToggle({
-Name = "Tracers ESP",
-Default = false,
-Callback = function(Value)
-    Settings.Tracers = Value
-    ESP.Tracers = Settings.Tracers
-end
-})
-
-P4:AddToggle({
-Name = "Name ESP",
-Default = false,
-Callback = function(Value)
-    ESP.Names = Settings.EspNames
-    Settings.EspNames = Value
-end
-})
-
-P4:AddToggle({
-Name = "Boxes ESP",
-Default = false,
-Callback = function(Value)
-    Settings.Boxes = Value
-    ESP.Boxes = Settings.Boxes
-end
-})
 
 P4:AddToggle({
 Name = "N Noclip",
@@ -800,4 +759,83 @@ P4:AddButton({
 Name = "Rejoin",
 Callback = function()
 game:GetService("TeleportService"):Teleport(game.PlaceId, Player) end
+})
+
+local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/Karrot-Esp"))()
+
+P4:AddToggle({
+Name = "Enable ESP",
+Default = false,
+Callback = function(Value)
+    Settings.Esp = Value
+    ESP:Toggle(Settings.Esp)
+end
+})
+
+P4:AddToggle({
+Name = "Player ESP",
+Default = false,
+Callback = function(Value)
+    Settings.PlayerEsp = Value
+    ESP.Players = Settings.PlayerEsp
+end
+})
+
+P4:AddToggle({
+Name = "Zombie ESP",
+Default = false,
+Callback = function(Value)
+    Settings.Orange = Value
+    ESP.Orange = Settings.Orange
+
+ESP:AddObjectListener(Workspace.Zombies, {
+    Color =  Color3.new(255, 0, 0),
+    Type = "Model",
+    PrimaryPart = function(v)
+        local H = v:FindFirstChild("Torso")
+        while not H do
+            wait()
+            H = v:FindFirstChild("Torso")
+        end
+        return H
+    end,
+    Validator = function(v)
+        return not game.Players:GetPlayerFromCharacter(v) and v
+    end,
+    CustomName = function(v)
+        return "Zombie"
+    end,
+    IsEnabled = "Orange",
+})
+
+end
+})
+
+
+
+P4:AddToggle({
+Name = "Tracers ESP",
+Default = false,
+Callback = function(Value)
+    Settings.Tracers = Value
+    ESP.Tracers = Settings.Tracers
+end
+})
+
+P4:AddToggle({
+Name = "Name ESP",
+Default = false,
+Callback = function(Value)
+    ESP.Names = Settings.EspNames
+    Settings.EspNames = Value
+end
+})
+
+P4:AddToggle({
+Name = "Boxes ESP",
+Default = false,
+Callback = function(Value)
+    Settings.Boxes = Value
+    ESP.Boxes = Settings.Boxes
+end
 })
