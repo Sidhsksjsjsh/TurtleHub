@@ -341,6 +341,7 @@ end)
 end
 })
 
+--[[
 P3:AddToggle({
 Name = "ESP Body Colors (Zombie only)",
 Default = false,
@@ -407,7 +408,7 @@ end
 end
 end
 })
-
+--]]
 P3:AddButton({
 Name = "nearby zombie notifications",
 Callback = function(esp)
