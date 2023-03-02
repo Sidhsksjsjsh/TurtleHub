@@ -358,12 +358,13 @@ end
 
 if Distance < 10 then
    NearbyService = RunService.Stepped:Connect(NearZombieNotify)
+   end
    
 if MaxNotify > 1 then
   if NearbyService then
+  MaxNotify = 0
   NearbyService:Disconnect()
   end
-end
 end
 end
 })
