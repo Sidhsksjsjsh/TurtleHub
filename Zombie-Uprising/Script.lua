@@ -10,6 +10,8 @@ local Workspace = game:GetService("Workspace")
 local CoreGui = game:GetService("CoreGui")
 local VirtualInputManager = game:GetService('VirtualInputManager')
 local TeleportService = game:GetService("TeleportService")
+local Distance
+
 for i,v in pairs(getconnections(Player.Idled)) do
     v:Disable()
 end 
@@ -201,7 +203,7 @@ PremiumOnly = false
 })
 
 local P4 = Window:MakeTab({
-Name = "ESP",
+Name = "Misc",
 Icon = "rbxassetid://4483345998",
 PremiumOnly = false
 })
@@ -219,7 +221,7 @@ PremiumOnly = false
 })
 
 local P3 = Window:MakeTab({
-Name = "Misc",
+Name = "ESP",
 Icon = "rbxassetid://4483345998",
 PremiumOnly = false
 })
@@ -298,7 +300,75 @@ Callback = function(Value)
 end
 })
 
-P3:AddTextbox({
+P3:AddToggle({
+Name = "ESP Distance",
+Default = false,
+Callback = function(esp)
+local thing
+local latespos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+    shared.toggle = esp
+    print(shared.toggle)
+    thing = esp
+    spawn(function()
+        if thing then
+local BillboardGui = Instance.new("BillboardGui")    
+local Text = Instance.new("TextLabel")
+ 
+while wait() do
+for i,v in pairs(game.Workspace:GetDescendants()) do
+        if v:IsA("BoolValue") and v.Name == "Zombies" then
+Distance = (v.Parent.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+   BillboardGui.Parent = v.Parent.Head
+   BillboardGui.AlwaysOnTop = true
+   BillboardGui.LightInfluence = 1
+   BillboardGui.Size = UDim2.new(0, 50, 0, 50)
+   BillboardGui.StudsOffset = Vector3.new(0, 2, 0)
+ 
+   Text.Parent = BillboardGui
+   Text.BackgroundColor3 = Color3.new(1, 1, 1)
+   Text.BackgroundTransparency = 1
+   Text.Size = UDim2.new(1.5, 0, 1, 0)
+   Text.Text = "Zombie \n".. math.floor(Distance) .. ""
+   Text.TextColor3 = Color3.new(255, 255, 255)
+   Text.TextScaled = true
+   elseif not thing then
+   BillboardGui:Destroy()
+end
+end
+end
+end
+end)
+end
+})
+
+P3:AddButton({
+Name = "nearby zombie notifications",
+Callback = function(esp)
+local MaxNotify = 0
+
+local function NearZombieNotify()
+    MaxNotify = MaxNotify + 1
+OrionLib:MakeNotification({
+Name = "DANGER!",
+Content = "ZOMBIES ARE AROUND YOU!",
+Image = "rbxassetid://4483345998",
+Time = 5
+})
+end
+
+if Distance < 10 then
+   NearbyService = RunService.Stepped:Connect(NearZombieNotify)
+   
+if MaxNotify > 1 then
+  if NearbyService then
+  NearbyService:Disconnect()
+  end
+end
+end
+end
+})
+
+P4:AddTextbox({
 Name = "FPS cap",
 Default = "Only numbers",
 TextDisappear = true,
@@ -307,7 +377,7 @@ Callback = function(Value)
 end
 })
 
-P3:AddTextbox({
+P4:AddTextbox({
 Name = "Seconds Until ServerHop",
 Default = "Only numbers",
 TextDisappear = true,
@@ -316,7 +386,7 @@ Callback = function(Value)
 end
 })
 
-P3:AddToggle({
+P4:AddToggle({
 Name = "Infinite Jump",
 Default = false,
 Callback = function(Value)
