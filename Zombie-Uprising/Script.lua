@@ -1285,7 +1285,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
     end
 end)
 
-return ESP
+
 
 P4:AddToggle({
 Name = "Enable ESP",
