@@ -409,7 +409,7 @@ end
 end
 end
 })
---]]
+
 P3:AddButton({
 Name = "nearby zombie notifications",
 Callback = function(esp)
@@ -437,6 +437,7 @@ if MaxNotify > 1 then
 end
 end
 })
+--]]
 
 P4:AddTextbox({
 Name = "FPS cap",
