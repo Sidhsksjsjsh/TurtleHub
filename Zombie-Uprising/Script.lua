@@ -300,6 +300,7 @@ Callback = function(Value)
 end
 })
 
+--[[
 P3:AddToggle({
 Name = "ESP Distance",
 Default = false,
@@ -341,7 +342,7 @@ end)
 end
 })
 
---[[
+
 P3:AddToggle({
 Name = "ESP Body Colors (Zombie only)",
 Default = false,
@@ -1287,7 +1288,7 @@ end)
 
 
 
-P4:AddToggle({
+P3:AddToggle({
 Name = "Enable ESP",
 Default = false,
 Callback = function(Value)
@@ -1296,7 +1297,7 @@ Callback = function(Value)
 end
 })
 
-P4:AddToggle({
+P3:AddToggle({
 Name = "Player ESP",
 Default = false,
 Callback = function(Value)
@@ -1305,7 +1306,7 @@ Callback = function(Value)
 end
 })
 
-P4:AddToggle({
+P3:AddToggle({
 Name = "Zombie ESP",
 Default = false,
 Callback = function(Value)
