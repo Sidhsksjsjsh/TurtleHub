@@ -27,7 +27,7 @@ RunService.Stepped:connect(
 local Circle = Drawing.new("Circle")
 Circle.Color = Color3.fromRGB(22, 13, 56)
 Circle.Thickness = 1
-Circle.Radius = 250
+Circle.Radius = 100
 Circle.Visible = false 
 Circle.NumSides = 1000
 Circle.Filled = false
@@ -290,8 +290,8 @@ end
 P1:AddSlider({
 Name = "Aimbot Smoothness",
 Min = 0,
-Max = 10,
-Default = 10,
+Max = 100,
+Default = 100,
 Color = Color3.fromRGB(255,255,255),
 Increment = 1,
 ValueName = "Smoothness",
