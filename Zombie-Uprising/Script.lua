@@ -13,10 +13,10 @@ local TeleportService = game:GetService("TeleportService")
 local Camera = Workspace.CurrentCamera
 local Distance
 
-Settings = {
+local Settings = {
     TeamCheck = false,
     Delay = 0.01,
-    Enabled = false
+    Enabled = false,
     Smoothness = 100,
     FOV = 100
 }
