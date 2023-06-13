@@ -10,7 +10,16 @@ local Workspace = game:GetService("Workspace")
 local CoreGui = game:GetService("CoreGui")
 local VirtualInputManager = game:GetService('VirtualInputManager')
 local TeleportService = game:GetService("TeleportService")
+local Camera = Workspace.CurrentCamera
 local Distance
+
+Settings = {
+    TeamCheck = false,
+    Delay = 0.01,
+    Enabled = false
+    Smoothness = 100,
+    FOV = 100
+}
 
 for i,v in pairs(getconnections(Player.Idled)) do
     v:Disable()
@@ -28,7 +37,7 @@ local Circle = Drawing.new("Circle")
 Circle.Color = Color3.fromRGB(22, 13, 56)
 Circle.Thickness = 1
 Circle.Radius = 100
-Circle.Visible = false 
+Circle.Visible = true
 Circle.NumSides = 1000
 Circle.Filled = false
 Circle.Transparency = 1
@@ -36,7 +45,7 @@ Circle.Transparency = 1
 RunService.RenderStepped:Connect(
     function()
         local Mouse = UserInputService:GetMouseLocation()
-        Circle.Position = Vector2.new(Mouse.X, Mouse.Y)
+        Circle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
     end
 )
 
@@ -99,7 +108,7 @@ function GetClosestToCuror()
                  then
                     Distance =
                         (Vector2.new(Point.X, Point.Y) -
-                        Vector2.new(Player:GetMouse().X, Player:GetMouse().Y)).magnitude
+                        Vector2.new(Camera.ViewportSize.X, Camera.ViewportSize.Y)).magnitude
                     if Distance <= math.huge then
                         Closest = Distance
                         Target = v
@@ -120,20 +129,21 @@ game:GetService("RunService").RenderStepped:Connect(
             local Mouse = game:GetService("UserInputService"):GetMouseLocation()
             local TargetPos = game.workspace.Camera:WorldToViewportPoint(ClosestPlayer.HumanoidRootPart.Position)
             mousemoverel(
-                (TargetPos.X - Mouse.X) * Settings.Smoothness ,
-                (TargetPos.Y - Mouse.Y) * Settings.Smoothness 
+                (TargetPos.X - Camera.ViewportSize.X) * Settings.Smoothness ,
+                (TargetPos.Y - Camera.ViewportSize.Y) * Settings.Smoothness 
             )
         end
        
     end
 )
 
-
+--[[
 Settings = {
     TeamCheck = false,
     Delay = 0.01,
     Enabled = false
 }
+--]]
 
 local Aim = false
 UserInputService.InputBegan:connect(
@@ -269,7 +279,7 @@ P1:AddSlider({
 Name = "Aimbot Radius",
 Min = 0,
 Max = 10000,
-Default = 1000,
+Default = 100,
 Color = Color3.fromRGB(255,255,255),
 Increment = 1,
 ValueName = "Radius",
