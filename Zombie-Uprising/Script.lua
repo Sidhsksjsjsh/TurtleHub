@@ -31,7 +31,9 @@ RunService.Stepped:connect(
 )
 
 
-
+local Sync = {
+	Radius = 100
+}
 
 local Circle = Drawing.new("Circle")
 Circle.Color = Color3.fromRGB(22, 13, 56)
@@ -241,6 +243,42 @@ Name = "Aimbot",
 Default = false,
 Callback = function(Value)
     Settings.Enabled = Value
+end
+})
+
+P1:AddToggle({
+Name = "Aimbot (work)",
+Default = false,
+Callback = function(Value)
+    local groundDistance = 8
+local Player = game:GetService("Players").LocalPlayer
+local function getNearest()
+local nearest, dist = nil, 99999
+for _,v in pairs(game.Workspace.Zombies:GetChildren()) do
+if (v:FindFirstChild("Head") ~= nil) then
+local m = (Player.Character.Head.Position - v.Head.Position).magnitude
+if (m < dist) then
+dist = m
+nearest = v
+end
+end
+end
+return nearest
+end
+
+_G.farm3 = Value
+
+_G.globalTarget2 = nil
+game:GetService("RunService").RenderStepped:Connect(function()
+if (_G.farm3 == true) then
+local target = getNearest()
+if (target ~= nil) then
+game:GetService("Workspace").CurrentCamera.CFrame = CFrame.new(game:GetService("Workspace").CurrentCamera.CFrame.p, target.Head.Position)
+-- Player.Character.HumanoidRootPart.CFrame = (target.HumanoidRootPart.CFrame * CFrame.new(0, groundDistance, 9))
+_G.globalTarget2 = target
+end
+end
+end)
 end
 })
 
