@@ -18,7 +18,9 @@ local Settings = {
     Delay = 0.01,
     Enabled = false,
     Smoothness = 100,
-    FOV = 100
+    FOV = 100,
+    FreeForAll = true,
+    tracking = false
 }
 
 for i,v in pairs(getconnections(Player.Idled)) do
@@ -39,7 +41,7 @@ local Circle = Drawing.new("Circle")
 Circle.Color = Color3.fromRGB(22, 13, 56)
 Circle.Thickness = 1
 Circle.Radius = 100
-Circle.Visible = true
+Circle.Visible = false
 Circle.NumSides = 1000
 Circle.Filled = false
 Circle.Transparency = 1
@@ -51,11 +53,38 @@ RunService.RenderStepped:Connect(
     end
 )
 
+local function ClosestZombie(func)
+	for _,v in pairs(Workspace["Zombies"]:GetChildren()) do
+		if (Player.Character.HumanoidRootPart.Position - v.Head.Position).magnitude < 9e9 then
+			func(v.Head)
+		end
+	end
+end
+
+local meta = getrawmetatable(game)
+setreadonly(meta, false)
+local oldNamecall = meta.__namecall
+meta.__namecall = newcclosure(function(...)
+ 
+local method = getnamecallmethod()
+local args = {...}
+if string.find(method,'Ray') then
+if Settings.tracking == true then
+    if args[1].Name ~= "Workspace" then
+            print(args[1])
+    end
+ClosestZombie(function(head)
+	args[2] = Ray.new(Camera.CFrame.Position,(head.Position + Vector3.new(0,(Camera.CFrame.Position - head.Position).Magnitude/500,0) - Camera.CFrame.Position).unit * 5000)
+end)
+end
+end
+return oldNamecall(unpack(args))
+end)
 
 local Shoot = false
 
 function FreeForAll(v)
-    if Settings.FreeForAll == false or Settings.T.FreeForAll == false then
+    if Settings.FreeForAll == false then
         if Player.Team == v.Team then
             return false
         else
@@ -239,51 +268,15 @@ PremiumOnly = false
 })
 
 P1:AddToggle({
-Name = "Aimbot",
-Default = false,
-Callback = function(Value)
-    Settings.Enabled = Value
-end
-})
-
-P1:AddToggle({
-Name = "Aimbot (work)",
-Default = false,
-Callback = function(Value)
-    local groundDistance = 8
-local Player = game:GetService("Players").LocalPlayer
-local function getNearest()
-local nearest, dist = nil, 99999
-for _,v in pairs(game.Workspace.Zombies:GetChildren()) do
-if (v:FindFirstChild("Head") ~= nil) then
-local m = (Player.Character.Head.Position - v.Head.Position).magnitude
-if (m < dist) then
-dist = m
-nearest = v
-end
-end
-end
-return nearest
-end
-
-_G.farm3 = Value
-
-_G.globalTarget2 = nil
-game:GetService("RunService").RenderStepped:Connect(function()
-if (_G.farm3 == true) then
-local target = getNearest()
-if (target ~= nil) then
-game:GetService("Workspace").CurrentCamera.CFrame = CFrame.new(game:GetService("Workspace").CurrentCamera.CFrame.p, target.Head.Position)
--- Player.Character.HumanoidRootPart.CFrame = (target.HumanoidRootPart.CFrame * CFrame.new(0, groundDistance, 9))
-_G.globalTarget2 = target
-end
-end
-end)
-end
+  Name = "Bullet tracking",
+  Default = false,
+  Callback = function(Value)
+    Settings.tracking = Value
+  end
 })
 
 
-P1:AddDropdown({
+--[[P1:AddDropdown({
 Name = "HitPart",
 Default = "None",
 Options = {"HumanoidRootPart","Head","UpperTorso","LowerTorso","Random"},
@@ -348,7 +341,6 @@ Callback = function(Value)
 end
 })
 
---[[
 P3:AddToggle({
 Name = "ESP Distance",
 Default = false,
@@ -1385,7 +1377,20 @@ ESP:AddObjectListener(Workspace.Zombies, {
 end
 })
 
-
+local zXRAY = false
+local function zChams(chr)
+	if zXRAY == true then
+		local esp = Instance.new("Highlight")
+		esp.Name = "XRAY | TURTLE HUB"
+		esp.FillColor = Color3.new(0,1,0)
+		esp.OutlineColor = Color3.new(1,1,1)
+		esp.FillTransparency = 1
+		esp.OutlineTransparency = 0
+		esp.Adornee = chr
+		esp.Parent = chr
+		esp.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	end
+end
 
 P3:AddToggle({
 Name = "Tracers ESP",
@@ -1413,3 +1418,20 @@ Callback = function(Value)
     ESP.Boxes = Settings.Boxes
 end
 })
+
+P3:AddToggle({
+Name = "Zombie Outline (test)",
+Default = false,
+Callback = function(Value)
+    zXRAY = Value
+    for _,v in pairs(Workspace["Zombies"]:GetChildren()) do
+	if v:FindFirstChild("Humanoid") then
+		zChams(v.Humanoid)
+	elseif v:FindFirstChild("HumanoidRootPart") then
+		zChams(v.HumanoidRootPart)
+	end
+    end
+end
+})
+
+Workspace["Zombies"].ChildAdded:Connect(zChams)
