@@ -20,7 +20,8 @@ local Settings = {
     Smoothness = 100,
     FOV = 100,
     FreeForAll = true,
-    tracking = false
+    tracking = false,
+    WallCheck = true
 }
 
 for i,v in pairs(getconnections(Player.Idled)) do
@@ -74,7 +75,7 @@ if Settings.tracking == true then
             print(args[1])
     end
 ClosestZombie(function(head)
-	args[2] = Ray.new(Camera.CFrame.Position,(head.Position + Vector3.new(0,(Camera.CFrame.Position - head.Position).Magnitude/500,0) - Camera.CFrame.Position).unit * 5000)
+	args[2] = Ray.new(Camera.CFrame.p,(head.Position + Vector3.new(0,(Camera.CFrame.p - head.Position).Magnitude/500,0) - Camera.CFrame.p).unit * 5000)
 end)
 end
 end
@@ -99,7 +100,7 @@ function NotObstructing(i, v)
     if Settings.WallCheck then
         c = Workspace.CurrentCamera.CFrame.p
         a = Ray.new(c, i - c)
-        f = Workspace:FindPartOnRayWithIgnoreList(a, v)
+        f = Workspace:FindPartOnRayWithIgnoreList(a,v)
         return f == nil
     else
         return true
